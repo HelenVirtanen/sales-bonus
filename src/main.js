@@ -6,6 +6,13 @@
  */
 function calculateSimpleRevenue(purchase, _product) {
    // @TODO: Расчет выручки от операции
+   const { discount, quantity, sale_price} = purchase;
+   const grossRevenue = sale_price * quantity;
+   const discountPercent = 1 - discount / 100;
+   const netRevenue = grossRevenue * discountPercent;
+   const purchasePrice = _product.purchase_price * quantity;
+   const simpleRevenue = netRevenue - purchasePrice;
+   return simpleRevenue;
 }
 
 /**
@@ -17,6 +24,7 @@ function calculateSimpleRevenue(purchase, _product) {
  */
 function calculateBonusByProfit(index, total, seller) {
     // @TODO: Расчет бонуса от позиции в рейтинге
+    const { profit } = seller;
 }
 
 /**
@@ -26,6 +34,8 @@ function calculateBonusByProfit(index, total, seller) {
  * @returns {{revenue, top_products, bonus, name, sales_count, profit, seller_id}[]}
  */
 function analyzeSalesData(data, options) {
+    const { calculateRevenue, calculateBonus } = options;
+
     // @TODO: Проверка входных данных
 
     // @TODO: Проверка наличия опций
