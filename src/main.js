@@ -6,7 +6,7 @@
  */
 function calculateSimpleRevenue(purchase, _product) {
    // @TODO: Расчет выручки от операции
-    const { discount, quantity, sale_price} = purchase;
+    const { discount, quantity, sale_price } = purchase;
     const grossRevenue = sale_price * quantity;
     const discountPercent = 1 - discount / 100;
     const simpleRevenue = grossRevenue * discountPercent;
