@@ -1,5 +1,3 @@
-// const { ca } = require("element-plus/es/locales.mjs");
-
 /**
  * Функция для расчета выручки
  * @param purchase запись о покупке
