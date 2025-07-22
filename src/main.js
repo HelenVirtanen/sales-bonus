@@ -83,19 +83,16 @@ function analyzeSalesData(data, options) {
         sales_count: 0,
         products_sold: {}
     }));
-    console.log('Statistics of sellers', sellerStats);
 
 
     // @TODO: Индексация продавцов и товаров для быстрого доступа
     const sellerIndex = Object.fromEntries(sellerStats.map(seller => [seller.id, seller]));
-    console.log('Seller indexes', sellerIndex);
 
     const productIndex = data.products.reduce((result, product) => ({
         ...result,
         [product.sku]: product
     }), {});
 
-    console.log('Product indexes', productIndex);
 
     // @TODO: Расчет выручки и прибыли для каждого продавца
     data.purchase_records.forEach(record => {
@@ -119,22 +116,15 @@ function analyzeSalesData(data, options) {
     });
 
     // @TODO: Сортировка продавцов по прибыли
-    sellerStats.forEach((seller, index) => {
-        console.log(`Profit of seller № ${index}`, seller.profit);
-    });
-
-    const sellerRatingProfit = sellerStats.sort((sellerA, sellerB) => sellerB.profit - sellerA.profit);
-    console.log('Ranking by profit', sellerRatingProfit);
+    sellerStats.sort((sellerA, sellerB) => sellerB.profit - sellerA.profit);
 
     // @TODO: Назначение премий на основе ранжирования
     sellerStats.forEach((seller, index) => {
         seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller);
-        console.log('BONUS', seller.bonus);
         seller.top_products = Object.entries(seller.products_sold)
             .map(([sku, quantity]) => ({sku, quantity}))
             .sort((productA, productB) => productB.quantity - productA.quantity)
             .slice(0, 10);
-        console.log('TOP PRODUCTS', seller.top_products);
     });
 
 
