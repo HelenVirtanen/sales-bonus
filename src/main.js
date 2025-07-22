@@ -9,17 +9,11 @@ const { ca } = require("element-plus/es/locales.mjs");
 function calculateSimpleRevenue(purchase, _product) {
    // @TODO: Расчет выручки от операции
     const { discount, quantity, sale_price} = purchase;
-    console.log('discount', discount, 'quantity', quantity, 'sale price', sale_price);
     const grossRevenue = sale_price * quantity;
-    console.log('GROSS', grossRevenue);
     const discountPercent = 1 - discount / 100;
-    console.log('DISCOUNT %', discountPercent);
     const netRevenue = grossRevenue * discountPercent;
-    console.log('NET', netRevenue);
     const cost = _product.purchase_price * quantity;
-    console.log('COST', cost);
     const simpleRevenue = netRevenue - cost;
-    console.log('SIMPLEREVENUE', simpleRevenue);
     return simpleRevenue;
 }
 
@@ -120,21 +114,17 @@ function analyzeSalesData(data, options) {
                 seller.products_sold[item.sku] = 0;
             }
             // По артикулу товара увеличить его проданное количество у продавца
+            seller.products_sold[item.sku] += item.quantity;
         });
     });
 
     // @TODO: Сортировка продавцов по прибыли
-    sellerStats.forEach((seller) => {
-        console.log('Net revenue of seller', seller.revenue);
-    });
-
-    sellerStats.forEach((seller) => {
-        console.log('Profit of seller', seller.profit);
+    sellerStats.forEach((seller, index) => {
+        console.log(`Profit of seller № ${index}`, seller.profit);
     });
 
     const sellerRatingProfit = sellerStats.sort((sellerA, sellerB) => sellerB.profit - sellerA.profit);
-
-    console.log('Rating by profit', sellerRatingProfit);
+    console.log('Ranking by profit', sellerRatingProfit);
 
     // @TODO: Назначение премий на основе ранжирования
 
