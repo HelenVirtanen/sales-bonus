@@ -133,8 +133,8 @@ function analyzeSalesData(data, options) {
         seller.top_products = Object.entries(seller.products_sold)
             .map(([sku, quantity]) => ({sku, quantity}))
             .sort((productA, productB) => productB.quantity - productA.quantity)
+            .slice(0, 10);
         console.log('TOP PRODUCTS', seller.top_products);
-        // Формируем топ-10 товаров
     });
 
     // @TODO: Подготовка итоговой коллекции с нужными полями
