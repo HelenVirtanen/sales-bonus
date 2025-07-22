@@ -83,8 +83,8 @@ function analyzeSalesData(data, options) {
         sales_count: 0,
         products_sold: {}
     }));
+    console.log('Statistics of sellers', sellerStats);
 
-    console.log(sellerStats);
 
     // @TODO: Индексация продавцов и товаров для быстрого доступа
     const sellerIndex = Object.fromEntries(sellerStats.map(seller => [seller.id, seller]));
@@ -98,8 +98,38 @@ function analyzeSalesData(data, options) {
     console.log('Product indexes', productIndex);
 
     // @TODO: Расчет выручки и прибыли для каждого продавца
+    data.purchase_records.forEach(record => {
+        const seller = sellerIndex[record.seller_id];
+        console.log('SELLER', seller) 
+        seller.sales_count += 1;
+        console.log('SALES_COUNT', seller.sales_count)
+        seller.revenue += record.total_amount;
+        console.log('TOTAL', seller.revenue);
+
+        // Расчёт прибыли для каждого товара
+        record.items.forEach(item => {
+            const product = productIndex[item.sku]; // Товар
+            // Посчитать себестоимость (cost) товара как product.purchase_price, умноженную на количество товаров из чека
+            // Посчитать выручку (revenue) с учётом скидки через функцию calculateRevenue
+            // Посчитать прибыль: выручка минус себестоимость
+        // Увеличить общую накопленную прибыль (profit) у продавца  
+
+            // Учёт количества проданных товаров
+            if (!seller.products_sold[item.sku]) {
+                seller.products_sold[item.sku] = 0;
+            }
+            // По артикулу товара увеличить его проданное количество у продавца
+        });
+ });
 
     // @TODO: Сортировка продавцов по прибыли
+    sellerStats.forEach((seller) => {
+        console.log('Net revenue of seller', seller.revenue);
+    });
+
+    const sellerRating = sellerStats.toSorted(seller => seller.revenue);
+
+    console.log('Raring by net revenue', sellerRating);
 
     // @TODO: Назначение премий на основе ранжирования
 
