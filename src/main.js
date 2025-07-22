@@ -1,4 +1,4 @@
-const { ca } = require("element-plus/es/locales.mjs");
+// const { ca } = require("element-plus/es/locales.mjs");
 
 /**
  * Функция для расчета выручки
