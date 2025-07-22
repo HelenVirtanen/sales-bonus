@@ -6,13 +6,13 @@
  */
 function calculateSimpleRevenue(purchase, _product) {
    // @TODO: Расчет выручки от операции
-   const { discount, quantity, sale_price} = purchase;
-   const grossRevenue = sale_price * quantity;
-   const discountPercent = 1 - discount / 100;
-   const netRevenue = grossRevenue * discountPercent;
-   const purchasePrice = _product.purchase_price * quantity;
-   const simpleRevenue = netRevenue - purchasePrice;
-   return simpleRevenue;
+    const { discount, quantity, sale_price} = purchase;
+    const grossRevenue = sale_price * quantity;
+    const discountPercent = 1 - discount / 100;
+    const netRevenue = grossRevenue * discountPercent;
+    const purchasePrice = _product.purchase_price * quantity;
+    const simpleRevenue = netRevenue - purchasePrice;
+    return simpleRevenue;
 }
 
 /**
@@ -55,28 +55,31 @@ function analyzeSalesData(data, options) {
 
     // @TODO: Проверка входных данных
     if (!data ||
-        !options ||
-        typeof calculateSimpleRevenue !== 'function' ||
-        typeof calculateBonusByProfit !== 'function' ||
         !Array.isArray(data.purchase_records) ||
         !Array.isArray(data.products) ||
         !Array.isArray(data.sellers) ||
         !Array.isArray(data.customers)
     ) {
-    throw new Error('Некорректные входные данные');
-} 
+        throw new Error('Некорректные входные данные');
+    } 
 
     // @TODO: Проверка наличия опций
+    if (!options ||
+        typeof calculateSimpleRevenue !== 'function' ||
+        typeof calculateBonusByProfit !== 'function'
+    ) {
+        throw new Error('Не хватает опций (функций) для работы с данными');
+    } 
 
     // @TODO: Подготовка промежуточных данных для сбора статистики
-    const sellerStatistic = data.sellers.map(seller => ({
+    const sellerStats = data.sellers.map(seller => ({
         id: seller.id,
         name: `${seller.first_name} ${seller.last_name}`,
         revenue: 0,
         profit: 0,
         sales_count: 0,
         products_sold: {}
-}));
+    }));
 
     // @TODO: Индексация продавцов и товаров для быстрого доступа
 
