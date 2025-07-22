@@ -130,7 +130,9 @@ function analyzeSalesData(data, options) {
     sellerStats.forEach((seller, index) => {
         seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller);
         console.log('BONUS', seller.bonus);
-        seller.top_products = Object.entries(seller.products_sold).map(([sku, quantity]) => ([{sku, quantity}]));
+        seller.top_products = Object.entries(seller.products_sold)
+            .map(([sku, quantity]) => ({sku, quantity}))
+            .sort((productA, productB) => productB.quantity - productA.quantity)
         console.log('TOP PRODUCTS', seller.top_products);
         // Формируем топ-10 товаров
     });
