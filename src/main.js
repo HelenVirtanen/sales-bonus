@@ -11,9 +11,7 @@ function calculateSimpleRevenue(purchase, _product) {
     const { discount, quantity, sale_price} = purchase;
     const grossRevenue = sale_price * quantity;
     const discountPercent = 1 - discount / 100;
-    const netRevenue = grossRevenue * discountPercent;
-    const cost = _product.purchase_price * quantity;
-    const simpleRevenue = netRevenue - cost;
+    const simpleRevenue = grossRevenue * discountPercent;
     return simpleRevenue;
 }
 
@@ -103,7 +101,9 @@ function analyzeSalesData(data, options) {
         // Расчёт прибыли для каждого товара
         record.items.forEach(item => {
             const product = productIndex[item.sku];
-            const profit = calculateSimpleRevenue(item, product);
+            const cost = product.purchase_price * item.quantity;
+            const netRevenue = calculateSimpleRevenue(item, product); 
+            const profit = netRevenue - cost;
             seller.profit += profit; 
 
             // Учёт количества проданных товаров
