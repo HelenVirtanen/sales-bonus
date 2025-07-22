@@ -51,14 +51,33 @@ function calculateBonusByProfit(index, total, seller) {
  * @returns {{revenue, top_products, bonus, name, sales_count, profit, seller_id}[]}
  */
 function analyzeSalesData(data, options) {
-    const { calculateRevenue, calculateBonus } = options;
+    const { calculateSimpleRevenue, calculateBonusByProfit } = options;
 
     // @TODO: Проверка входных данных
+    if (!data ||
+        !options ||
+        typeof calculateSimpleRevenue !== 'function' ||
+        typeof calculateBonusByProfit !== 'function' ||
+        !Array.isArray(data.purchase_records) ||
+        !Array.isArray(data.products) ||
+        !Array.isArray(data.sellers) ||
+        !Array.isArray(data.customers)
+    ) {
+    throw new Error('Некорректные входные данные');
+} 
 
     // @TODO: Проверка наличия опций
 
     // @TODO: Подготовка промежуточных данных для сбора статистики
-    
+    const sellerStatistic = data.sellers.map(seller => ({
+        id: seller.id,
+        name: `${seller.first_name} ${seller.last_name}`,
+        revenue: 0,
+        profit: 0,
+        sales_count: 0,
+        products_sold: {}
+}));
+
     // @TODO: Индексация продавцов и товаров для быстрого доступа
 
     // @TODO: Расчет выручки и прибыли для каждого продавца
