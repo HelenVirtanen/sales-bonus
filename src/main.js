@@ -9,11 +9,17 @@ const { ca } = require("element-plus/es/locales.mjs");
 function calculateSimpleRevenue(purchase, _product) {
    // @TODO: Расчет выручки от операции
     const { discount, quantity, sale_price} = purchase;
+    console.log('discount', discount, 'quantity', quantity, 'sale price', sale_price);
     const grossRevenue = sale_price * quantity;
+    console.log('GROSS', grossRevenue);
     const discountPercent = 1 - discount / 100;
+    console.log('DISCOUNT %', discountPercent);
     const netRevenue = grossRevenue * discountPercent;
-    const purchasePrice = _product.purchase_price * quantity;
-    const simpleRevenue = netRevenue - purchasePrice;
+    console.log('NET', netRevenue);
+    const cost = _product.purchase_price * quantity;
+    console.log('COST', cost);
+    const simpleRevenue = netRevenue - cost;
+    console.log('SIMPLEREVENUE', simpleRevenue);
     return simpleRevenue;
 }
 
@@ -100,19 +106,14 @@ function analyzeSalesData(data, options) {
     // @TODO: Расчет выручки и прибыли для каждого продавца
     data.purchase_records.forEach(record => {
         const seller = sellerIndex[record.seller_id];
-        console.log('SELLER', seller) 
         seller.sales_count += 1;
-        console.log('SALES_COUNT', seller.sales_count)
         seller.revenue += record.total_amount;
-        console.log('TOTAL', seller.revenue);
 
         // Расчёт прибыли для каждого товара
         record.items.forEach(item => {
-            const product = productIndex[item.sku]; // Товар
-            // Посчитать себестоимость (cost) товара как product.purchase_price, умноженную на количество товаров из чека
-            // Посчитать выручку (revenue) с учётом скидки через функцию calculateRevenue
-            // Посчитать прибыль: выручка минус себестоимость
-        // Увеличить общую накопленную прибыль (profit) у продавца  
+            const product = productIndex[item.sku];
+            const profit = calculateSimpleRevenue(item, product);
+            seller.profit += profit; 
 
             // Учёт количества проданных товаров
             if (!seller.products_sold[item.sku]) {
@@ -120,16 +121,20 @@ function analyzeSalesData(data, options) {
             }
             // По артикулу товара увеличить его проданное количество у продавца
         });
- });
+    });
 
     // @TODO: Сортировка продавцов по прибыли
     sellerStats.forEach((seller) => {
         console.log('Net revenue of seller', seller.revenue);
     });
 
-    const sellerRating = sellerStats.toSorted(seller => seller.revenue);
+    sellerStats.forEach((seller) => {
+        console.log('Profit of seller', seller.profit);
+    });
 
-    console.log('Raring by net revenue', sellerRating);
+    const sellerRatingProfit = sellerStats.sort((sellerA, sellerB) => sellerB.profit - sellerA.profit);
+
+    console.log('Rating by profit', sellerRatingProfit);
 
     // @TODO: Назначение премий на основе ранжирования
 
