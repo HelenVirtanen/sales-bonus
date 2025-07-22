@@ -127,6 +127,11 @@ function analyzeSalesData(data, options) {
     console.log('Ranking by profit', sellerRatingProfit);
 
     // @TODO: Назначение премий на основе ранжирования
+    sellerStats.forEach((seller, index) => {
+        seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller);
+        console.log('BONUS', seller.bonus);
+        // Формируем топ-10 товаров
+    });
 
     // @TODO: Подготовка итоговой коллекции с нужными полями
 }
